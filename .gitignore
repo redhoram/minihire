@@ -42,3 +42,10 @@ next-env.d.ts
 
 # minihire runtime data store
 /data/candidates.json
+/data/positions.json
+
+# multica agent working notes
+.multica/
+
+# dev server log
+dev-server.log

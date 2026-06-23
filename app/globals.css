@@ -1,26 +1,73 @@
 @import "tailwindcss";
 
+/* Dark mode responds to data-theme="night" on <html> */
+@custom-variant dark (&:is([data-theme="night"], [data-theme="night"] *));
+
+/* Night mode — default */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #0A0A0A;
+  --bg-card: #1A1A1A;
+  --text: #FAF0E6;
+  --text-muted: #8B7B6E;
+  --border: #2E2E2E;
+  --yellow: #F5C518;
+  --yellow-hover: #E2B400;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Day mode */
+[data-theme="day"] {
+  --bg: #FAF0E6;
+  --bg-card: #FFFFFF;
+  --text: #0A0A0A;
+  --text-muted: #7A6B5E;
+  --border: #D5C8B8;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-inter, Arial, sans-serif);
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-family: var(--font-inter, sans-serif);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.15s;
+}
+
+.btn-outline:hover {
+  background-color: var(--bg-card);
+}
+
+.btn-outline:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.field-input {
+  border-radius: 0.375rem;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  -webkit-text-fill-color: var(--text);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  font-family: var(--font-inter, sans-serif);
+  outline: none;
+  width: 100%;
+}
+
+.field-input:focus {
+  border-color: var(--text-muted);
 }

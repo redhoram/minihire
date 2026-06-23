@@ -44,7 +44,53 @@ export async function PATCH(
         { status: 400 }
       );
     }
-    candidates[index].stage = patch.stage as Stage;
+    const newStage = patch.stage as Stage;
+    if (newStage === "Hired" && candidates[index].stage !== "Hired") {
+      candidates[index].hiredAt = new Date().toISOString();
+    }
+    candidates[index].stage = newStage;
+  }
+
+  if ("email" in patch) {
+    if (typeof patch.email !== "string") {
+      return Response.json({ error: "email must be a string" }, { status: 400 });
+    }
+    candidates[index].email = patch.email.trim();
+  }
+
+  if ("source" in patch) {
+    if (typeof patch.source !== "string") {
+      return Response.json({ error: "source must be a string" }, { status: 400 });
+    }
+    candidates[index].source = patch.source.trim();
+  }
+
+  if ("pic" in patch) {
+    if (typeof patch.pic !== "string") {
+      return Response.json({ error: "pic must be a string" }, { status: 400 });
+    }
+    candidates[index].pic = patch.pic.trim();
+  }
+
+  if ("expectedSalary" in patch) {
+    if (typeof patch.expectedSalary !== "string") {
+      return Response.json({ error: "expectedSalary must be a string" }, { status: 400 });
+    }
+    candidates[index].expectedSalary = patch.expectedSalary.trim();
+  }
+
+  if ("rating" in patch) {
+    if (typeof patch.rating !== "number" || patch.rating < 1 || patch.rating > 5) {
+      return Response.json({ error: "rating must be a number between 1 and 5" }, { status: 400 });
+    }
+    candidates[index].rating = patch.rating;
+  }
+
+  if ("appliedAt" in patch) {
+    if (typeof patch.appliedAt !== "string" || patch.appliedAt.trim() === "") {
+      return Response.json({ error: "appliedAt must be a non-empty string" }, { status: 400 });
+    }
+    candidates[index].appliedAt = patch.appliedAt.trim();
   }
 
   if ("notes" in patch) {
