@@ -498,6 +498,11 @@ export default function CandidateBoard() {
             Logout
           </button>
 
+          {/* Settings */}
+          <button onClick={() => router.push("/settings")} className="btn-outline">
+            Settings
+          </button>
+
           {/* Add Position */}
           <button onClick={openAddPosition} className="btn-outline">
             + Add Position
