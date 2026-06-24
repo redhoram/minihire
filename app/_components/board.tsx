@@ -493,14 +493,14 @@ export default function CandidateBoard() {
             {theme === "night" ? "☀ Day" : "☽ Night"}
           </button>
 
-          {/* Logout */}
-          <button onClick={handleLogout} className="btn-outline">
-            Logout
-          </button>
-
           {/* Settings */}
           <button onClick={() => router.push("/settings")} className="btn-outline">
             Settings
+          </button>
+
+          {/* Logout */}
+          <button onClick={handleLogout} className="btn-outline">
+            Logout
           </button>
 
           {/* Add Position */}
