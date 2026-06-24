@@ -6,14 +6,45 @@ import Link from "next/link";
 
 export default function ResetPage() {
   const router = useRouter();
-  const [confirmed, setConfirmed] = useState(false);
+  const [currentPw, setCurrentPw] = useState("");
+  const [newPw, setNewPw] = useState("");
+  const [confirmPw, setConfirmPw] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  function handleReset() {
-    localStorage.removeItem("minihire_password");
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError("");
+
+    const stored = localStorage.getItem("minihire_password");
+    if (currentPw !== stored) {
+      setError("Password saat ini tidak cocok");
+      return;
+    }
+    if (newPw.length < 4) {
+      setError("Password minimal 4 karakter");
+      return;
+    }
+    if (newPw !== confirmPw) {
+      setError("Konfirmasi password tidak cocok");
+      return;
+    }
+
+    setLoading(true);
+    localStorage.setItem("minihire_password", newPw);
     localStorage.removeItem("minihire_session");
     document.cookie = "minihire_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax";
-    router.replace("/setup");
+    router.replace("/login");
   }
+
+  const labelStyle = {
+    display: "block",
+    fontSize: "0.75rem",
+    fontWeight: 500,
+    color: "var(--text-muted)",
+    marginBottom: "0.375rem",
+    fontFamily: "var(--font-inter, sans-serif)",
+  } as const;
 
   return (
     <main
@@ -50,31 +81,87 @@ export default function ResetPage() {
               fontFamily: "var(--font-inter, sans-serif)",
             }}
           >
-            Reset Password
+            Ganti Password
           </p>
         </div>
 
-        {!confirmed ? (
+        <form onSubmit={handleSubmit} noValidate>
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-            <p
-              style={{
-                color: "var(--text)",
-                fontSize: "0.875rem",
-                fontFamily: "var(--font-inter, sans-serif)",
-                lineHeight: 1.5,
-                textAlign: "center",
-              }}
-            >
-              Password yang tersimpan akan dihapus dan kamu perlu membuat password baru.
-            </p>
+            <div>
+              <label htmlFor="currentPw" style={labelStyle}>
+                Password Sekarang
+              </label>
+              <input
+                id="currentPw"
+                type="password"
+                className="field-input"
+                value={currentPw}
+                onChange={(e) => setCurrentPw(e.target.value)}
+                autoComplete="current-password"
+                required
+              />
+            </div>
+
+            <div>
+              <label htmlFor="newPw" style={labelStyle}>
+                Password Baru
+              </label>
+              <input
+                id="newPw"
+                type="password"
+                className="field-input"
+                value={newPw}
+                onChange={(e) => setNewPw(e.target.value)}
+                autoComplete="new-password"
+                required
+              />
+              <p
+                style={{
+                  fontSize: "0.75rem",
+                  color: "var(--text-muted)",
+                  fontFamily: "var(--font-inter, sans-serif)",
+                  marginTop: "0.25rem",
+                }}
+              >
+                Minimal 4 karakter
+              </p>
+            </div>
+
+            <div>
+              <label htmlFor="confirmPw" style={labelStyle}>
+                Konfirmasi Password Baru
+              </label>
+              <input
+                id="confirmPw"
+                type="password"
+                className="field-input"
+                value={confirmPw}
+                onChange={(e) => setConfirmPw(e.target.value)}
+                autoComplete="new-password"
+                required
+              />
+            </div>
+
+            {error && (
+              <p
+                role="alert"
+                style={{
+                  color: "#ef4444",
+                  fontSize: "0.8125rem",
+                  fontFamily: "var(--font-inter, sans-serif)",
+                }}
+              >
+                {error}
+              </p>
+            )}
 
             <button
-              type="button"
+              type="submit"
               className="btn-outline"
-              style={{ width: "100%", justifyContent: "center", borderColor: "#ef4444", color: "#ef4444" }}
-              onClick={() => setConfirmed(true)}
+              disabled={loading}
+              style={{ width: "100%", justifyContent: "center", marginTop: "0.25rem" }}
             >
-              Ya, reset password
+              {loading ? "Menyimpan..." : "Ganti Password"}
             </button>
 
             <div style={{ textAlign: "center" }}>
@@ -91,39 +178,7 @@ export default function ResetPage() {
               </Link>
             </div>
           </div>
-        ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-            <p
-              style={{
-                color: "var(--text)",
-                fontSize: "0.875rem",
-                fontFamily: "var(--font-inter, sans-serif)",
-                lineHeight: 1.5,
-                textAlign: "center",
-              }}
-            >
-              Konfirmasi: kamu yakin ingin menghapus password dan keluar dari semua sesi?
-            </p>
-
-            <button
-              type="button"
-              className="btn-outline"
-              style={{ width: "100%", justifyContent: "center", borderColor: "#ef4444", color: "#ef4444" }}
-              onClick={handleReset}
-            >
-              Hapus & buat password baru
-            </button>
-
-            <button
-              type="button"
-              className="btn-outline"
-              style={{ width: "100%", justifyContent: "center" }}
-              onClick={() => setConfirmed(false)}
-            >
-              Batal
-            </button>
-          </div>
-        )}
+        </form>
       </div>
     </main>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import type { Candidate, Position, Stage } from "@/lib/types";
 import { STAGES } from "@/lib/types";
 
@@ -48,6 +49,7 @@ function StarRating({ rating }: { rating: number }) {
 }
 
 export default function CandidateBoard() {
+  const router = useRouter();
   const [theme, setTheme] = useState<"night" | "day">("night");
   const [positions, setPositions] = useState<Position[]>([]);
   const [positionFilter, setPositionFilter] = useState("");
@@ -97,6 +99,12 @@ export default function CandidateBoard() {
     localStorage.setItem("minihire_theme", next);
     document.documentElement.setAttribute("data-theme", next);
     document.documentElement.style.colorScheme = next === "day" ? "light" : "dark";
+  }
+
+  function handleLogout() {
+    localStorage.removeItem("minihire_session");
+    document.cookie = "minihire_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax";
+    router.replace("/login");
   }
 
   async function loadPositions() {
@@ -483,6 +491,11 @@ export default function CandidateBoard() {
           {/* Theme toggle */}
           <button onClick={toggleTheme} className="btn-outline">
             {theme === "night" ? "☀ Day" : "☽ Night"}
+          </button>
+
+          {/* Logout */}
+          <button onClick={handleLogout} className="btn-outline">
+            Logout
           </button>
 
           {/* Add Position */}
