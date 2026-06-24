@@ -2,40 +2,37 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
-export default function SetupPage() {
+export default function LoginPage() {
   const router = useRouter();
   const [password, setPassword] = useState("");
-  const [confirm, setConfirm] = useState("");
   const [error, setError] = useState("");
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    if (localStorage.getItem("minihire_password")) {
-      router.replace("/login");
-    } else {
-      setReady(true);
+    const stored = localStorage.getItem("minihire_password");
+    if (!stored) {
+      router.replace("/setup");
+      return;
     }
+    if (localStorage.getItem("minihire_session") === "true") {
+      router.replace("/");
+      return;
+    }
+    setReady(true);
   }, [router]);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
 
-    if (!password) {
-      setError("Password tidak boleh kosong.");
-      return;
-    }
-    if (password.length < 4) {
-      setError("Password minimal 4 karakter.");
-      return;
-    }
-    if (password !== confirm) {
-      setError("Password dan Confirm Password harus sama.");
+    const stored = localStorage.getItem("minihire_password");
+    if (password !== stored) {
+      setError("Password salah");
       return;
     }
 
-    localStorage.setItem("minihire_password", password);
     localStorage.setItem("minihire_session", "true");
     document.cookie = "minihire_session=true; path=/; SameSite=Lax";
     router.replace("/");
@@ -58,7 +55,6 @@ export default function SetupPage() {
           maxWidth: "360px",
         }}
       >
-        {/* Logo */}
         <div className="text-center mb-6">
           <span
             style={{
@@ -79,7 +75,7 @@ export default function SetupPage() {
               fontFamily: "var(--font-inter, sans-serif)",
             }}
           >
-            Buat password untuk pertama kali
+            Masuk untuk melanjutkan
           </p>
         </div>
 
@@ -105,32 +101,7 @@ export default function SetupPage() {
                 className="field-input"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                autoComplete="new-password"
-                required
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="confirm"
-                style={{
-                  display: "block",
-                  fontSize: "0.75rem",
-                  fontWeight: 500,
-                  color: "var(--text-muted)",
-                  marginBottom: "0.375rem",
-                  fontFamily: "var(--font-inter, sans-serif)",
-                }}
-              >
-                Confirm Password
-              </label>
-              <input
-                id="confirm"
-                type="password"
-                className="field-input"
-                value={confirm}
-                onChange={(e) => setConfirm(e.target.value)}
-                autoComplete="new-password"
+                autoComplete="current-password"
                 required
               />
             </div>
@@ -147,9 +118,27 @@ export default function SetupPage() {
               </p>
             )}
 
-            <button type="submit" className="btn-outline" style={{ width: "100%", justifyContent: "center", marginTop: "0.25rem" }}>
-              Set Password
+            <button
+              type="submit"
+              className="btn-outline"
+              style={{ width: "100%", justifyContent: "center", marginTop: "0.25rem" }}
+            >
+              Login
             </button>
+
+            <div style={{ textAlign: "center" }}>
+              <Link
+                href="/reset"
+                style={{
+                  fontSize: "0.8125rem",
+                  color: "var(--text-muted)",
+                  fontFamily: "var(--font-inter, sans-serif)",
+                  textDecoration: "underline",
+                }}
+              >
+                Lupa password?
+              </Link>
+            </div>
           </div>
         </form>
       </div>
