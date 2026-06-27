@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Candidate, Position, Stage } from "@/lib/types";
 import { STAGES } from "@/lib/types";
+import Chat from "./chat";
 
 type FormState = {
   name: string;
@@ -1067,6 +1068,9 @@ export default function CandidateBoard() {
           </div>
         </div>
       )}
+
+      {/* ── AI Chat ── */}
+      <Chat />
 
       {/* ── Manage Positions Modal ── */}
       {positionModalOpen && (
