@@ -2,10 +2,16 @@ import { NextRequest } from "next/server";
 
 type Message = { role: string; content: string };
 
-async function proxyOpenAI(model: string, apiKey: string, messages: Message[]) {
+async function proxyOpenAICompat(
+  baseUrl: string,
+  model: string,
+  apiKey: string,
+  messages: Message[],
+  providerLabel: string
+) {
   let res: Response;
   try {
-    res = await fetch("https://api.openai.com/v1/chat/completions", {
+    res = await fetch(`${baseUrl}/chat/completions`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -14,16 +20,16 @@ async function proxyOpenAI(model: string, apiKey: string, messages: Message[]) {
       body: JSON.stringify({ model, messages }),
     });
   } catch {
-    return Response.json({ error: "Failed to reach OpenAI." }, { status: 502 });
+    return Response.json({ error: `Failed to reach ${providerLabel}.` }, { status: 502 });
   }
 
   if (res.status === 401) {
-    return Response.json({ error: "Invalid API key for OpenAI." }, { status: 401 });
+    return Response.json({ error: `Invalid API key for ${providerLabel}.` }, { status: 401 });
   }
   if (!res.ok) {
     const err = await res.json().catch(() => ({})) as Record<string, unknown>;
     const msg = (err?.error as Record<string, unknown>)?.message as string | undefined;
-    return Response.json({ error: msg ?? "OpenAI request failed." }, { status: res.status });
+    return Response.json({ error: msg ?? `${providerLabel} request failed.` }, { status: res.status });
   }
 
   const data = await res.json() as Record<string, unknown>;
@@ -96,12 +102,26 @@ export async function POST(request: NextRequest) {
   const normalizedProvider = provider.toLowerCase().trim();
 
   if (normalizedProvider === "openai") {
-    return proxyOpenAI(resolvedModel || "gpt-4o-mini", apiKey, messages as Message[]);
+    return proxyOpenAICompat(
+      "https://api.openai.com/v1",
+      resolvedModel || "gpt-4o-mini",
+      apiKey,
+      messages as Message[],
+      "OpenAI"
+    );
+  } else if (normalizedProvider === "groq") {
+    return proxyOpenAICompat(
+      "https://api.groq.com/openai/v1",
+      resolvedModel || "llama-3.3-70b-versatile",
+      apiKey,
+      messages as Message[],
+      "Groq"
+    );
   } else if (normalizedProvider === "anthropic") {
     return proxyAnthropic(resolvedModel || "claude-sonnet-4-6", apiKey, messages as Message[]);
   } else {
     return Response.json(
-      { error: `Unknown provider "${provider}". Supported providers: openai, anthropic.` },
+      { error: `Unknown provider "${provider}". Supported: openai, groq, anthropic.` },
       { status: 400 }
     );
   }

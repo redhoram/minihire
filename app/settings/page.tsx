@@ -9,7 +9,7 @@ type AiConfig = {
   apiKey: string;
 };
 
-const PROVIDERS = ["OpenAI", "Anthropic", "Custom"];
+const PROVIDERS = ["OpenAI", "Groq", "Anthropic"];
 
 export default function SettingsPage() {
   const [provider, setProvider] = useState("OpenAI");
@@ -159,7 +159,7 @@ export default function SettingsPage() {
               className="field-input"
               value={model}
               onChange={(e) => setModel(e.target.value)}
-              placeholder="e.g. gpt-4o, claude-sonnet-4-6"
+              placeholder="e.g. llama-3.3-70b-versatile, gpt-4o, claude-sonnet-4-6"
             />
           </div>
 
