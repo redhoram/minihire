@@ -28,7 +28,7 @@ function readAiConfig(): AiConfig | null {
     const raw = localStorage.getItem("minihire_ai_config");
     if (!raw) return null;
     const c = JSON.parse(raw) as Partial<AiConfig>;
-    if (!c.provider || !c.model || !c.apiKey) return null;
+    if (!c.provider || !c.apiKey) return null;
     return c as AiConfig;
   } catch {
     return null;
