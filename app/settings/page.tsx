@@ -29,7 +29,7 @@ export default function SettingsPage() {
   }, []);
 
   function handleSave() {
-    if (!provider || !model || !apiKey) {
+    if (!provider || !apiKey) {
       setStatus({ type: "error", message: "Fill in all fields to save." });
       return;
     }
