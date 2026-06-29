@@ -7,8 +7,12 @@ async function proxyOpenAICompat(
   model: string,
   apiKey: string,
   messages: Message[],
-  providerLabel: string
+  providerLabel: string,
+  system?: string
 ) {
+  const fullMessages: Message[] = system
+    ? [{ role: "system", content: system }, ...messages]
+    : messages;
   let res: Response;
   try {
     res = await fetch(`${baseUrl}/chat/completions`, {
@@ -17,7 +21,7 @@ async function proxyOpenAICompat(
         "Content-Type": "application/json",
         Authorization: `Bearer ${apiKey}`,
       },
-      body: JSON.stringify({ model, messages }),
+      body: JSON.stringify({ model, messages: fullMessages }),
     });
   } catch {
     return Response.json({ error: `Failed to reach ${providerLabel}.` }, { status: 502 });
@@ -38,7 +42,7 @@ async function proxyOpenAICompat(
   return Response.json({ content });
 }
 
-async function proxyAnthropic(model: string, apiKey: string, messages: Message[]) {
+async function proxyAnthropic(model: string, apiKey: string, messages: Message[], system?: string) {
   const resolvedModel = model.trim() || "claude-sonnet-4-6";
   let res: Response;
   try {
@@ -51,6 +55,7 @@ async function proxyAnthropic(model: string, apiKey: string, messages: Message[]
       },
       body: JSON.stringify({
         model: resolvedModel,
+        ...(system ? { system } : {}),
         messages,
         max_tokens: 1024,
       }),
@@ -86,7 +91,7 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: "Request body must be a JSON object" }, { status: 400 });
   }
 
-  const { provider, model, apiKey, messages } = body as Record<string, unknown>;
+  const { provider, model, apiKey, system, messages } = body as Record<string, unknown>;
 
   if (typeof provider !== "string" || provider.trim() === "") {
     return Response.json({ error: "provider is required" }, { status: 400 });
@@ -99,6 +104,7 @@ export async function POST(request: NextRequest) {
   }
 
   const resolvedModel = typeof model === "string" && model.trim() ? model.trim() : "";
+  const systemStr = typeof system === "string" && system.trim() ? system.trim() : undefined;
   const normalizedProvider = provider.toLowerCase().trim();
 
   if (normalizedProvider === "openai") {
@@ -107,7 +113,8 @@ export async function POST(request: NextRequest) {
       resolvedModel || "gpt-4o-mini",
       apiKey,
       messages as Message[],
-      "OpenAI"
+      "OpenAI",
+      systemStr
     );
   } else if (normalizedProvider === "groq") {
     return proxyOpenAICompat(
@@ -115,10 +122,11 @@ export async function POST(request: NextRequest) {
       resolvedModel || "llama-3.3-70b-versatile",
       apiKey,
       messages as Message[],
-      "Groq"
+      "Groq",
+      systemStr
     );
   } else if (normalizedProvider === "anthropic") {
-    return proxyAnthropic(resolvedModel || "claude-sonnet-4-6", apiKey, messages as Message[]);
+    return proxyAnthropic(resolvedModel || "claude-sonnet-4-6", apiKey, messages as Message[], systemStr);
   } else {
     return Response.json(
       { error: `Unknown provider "${provider}". Supported: openai, groq, anthropic.` },

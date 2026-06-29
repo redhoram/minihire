@@ -18,6 +18,42 @@ type ChatMessage = {
   content: string;
   error?: boolean;
 };
+type Candidate = {
+  id: string;
+  name: string;
+  position: string;
+  stage: string;
+  rating: number;
+  source: string;
+  pic: string;
+  expectedSalary: string;
+  appliedAt: string;
+  notes: string;
+};
+
+function buildSystemPrompt(candidates: Candidate[]): string {
+  const stages = ["Applied","Screening","Interview","Offering","Negotiation","Hired","Not Proceeding"];
+  const byStage = stages.map((s) => {
+    const list = candidates.filter((c) => c.stage === s);
+    if (list.length === 0) return `${s}: (none)`;
+    return `${s}:\n${list.map((c) =>
+      `  - ${c.name} | ${c.position} | Rating: ${c.rating}/5 | Source: ${c.source || "-"} | PIC: ${c.pic || "-"} | Salary: ${c.expectedSalary || "-"} | Applied: ${c.appliedAt?.slice(0,10) || "-"}${c.notes ? ` | Notes: ${c.notes}` : ""}`
+    ).join("\n")}`;
+  }).join("\n\n");
+
+  return `You are MiniHire AI, an assistant embedded inside MiniHire — a recruitment pipeline management app.
+
+Your role: help recruiters understand and act on their candidate pipeline. Answer ONLY questions related to:
+- The candidate pipeline data below
+- Recruitment, hiring, and HR best practices
+- Interview strategies, offer negotiation, and talent acquisition
+
+Refuse politely if asked anything outside HR/recruitment topics. Keep answers concise and actionable.
+
+## Current Pipeline (${candidates.length} total candidates)
+
+${byStage}`;
+}
 
 function readTheme(): "night" | "day" {
   return (localStorage.getItem("minihire_theme") as "night" | "day") ?? "night";
@@ -99,6 +135,7 @@ export default function Chat() {
 
   // AI config (re-read each time panel opens so config changes are reflected)
   const [aiConfig, setAiConfig] = useState<AiConfig | null>(null);
+  const [systemPrompt, setSystemPrompt] = useState<string>("");
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
@@ -124,9 +161,17 @@ export default function Chat() {
     return () => observer.disconnect();
   }, []);
 
-  // Re-read config every time the panel opens (user may have changed it in Settings)
+  // Re-read config + fetch pipeline data every time the panel opens
   useEffect(() => {
-    if (isOpen) setAiConfig(readAiConfig());
+    if (!isOpen) return;
+    setAiConfig(readAiConfig());
+    fetch("/api/candidates")
+      .then((r) => r.json())
+      .then((data: unknown) => {
+        const candidates = Array.isArray(data) ? (data as Candidate[]) : [];
+        setSystemPrompt(buildSystemPrompt(candidates));
+      })
+      .catch(() => setSystemPrompt(buildSystemPrompt([])));
   }, [isOpen]);
 
   // Scroll to bottom when new messages arrive or typing indicator appears
@@ -209,6 +254,7 @@ export default function Chat() {
           provider: aiConfig.provider,
           model: aiConfig.model,
           apiKey: aiConfig.apiKey,
+          system: systemPrompt,
           messages: nextMessages.map((m) => ({ role: m.role, content: m.content })),
         }),
       });
