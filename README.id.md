@@ -49,11 +49,11 @@ Lihat [CLAUDE.md](./CLAUDE.md) untuk spec lengkap dan konvensi tim.
 
 ## Di Luar Kode: Ops Squad
 
-MiniHire juga punya **squad AI non-dev** yang bekerja beriringan dengan tim dev — membuktikan Multica bisa menjalankan kerja coding dan non-coding secara paralel, di runtime berbeda.
+MiniHire juga punya **squad AI non-dev** — Pendamping — yang bekerja beriringan dengan tim dev di repo yang sama, membuktikan Multica bisa menjalankan kerja coding dan non-coding secara paralel, di runtime berbeda.
 
 | Squad | Runtime | Tugas |
 |-------|---------|-------|
-| Dev (repo ini) | Claude | Kode — API, UI, fitur |
-| [Ops](https://github.com/redhoram/MiniHire-Ops) | Antigravity (Gemini) | Riset, konten, dokumentasi, analisis — apapun yang non-kode |
+| Dev | Claude | Kode — API, UI, fitur |
+| Pendamping (Nayaka, Lekha, Aksara, Ganita, Waskita) | Antigravity (Gemini) | Riset, konten, dokumentasi, analisis — apapun yang non-kode, disimpan di [`outputs/`](./outputs) |
 
 Squad Ops (Nayaka, Lekha, Aksara, Ganita, Waskita) ada di repo terpisah, scope-nya berkembang lewat issue, bukan roadmap tetap.
