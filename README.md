@@ -46,3 +46,14 @@ npm run build  # type check + production build
 Issues → Jaya (spec + delegate) → Citra (design) → Sthira + Cipta (build) → Prajna (test) → Jaya (SHIP / NEEDS WORK / BLOCK)
 
 See [CLAUDE.md](./CLAUDE.md) for the full spec and conventions.
+
+## Beyond Code: The Ops Squad
+
+MiniHire also has a **non-dev AI squad** working alongside the dev team — proving Multica can run coding and non-coding work in parallel, on separate runtimes.
+
+| Squad | Runtime | Handles |
+|-------|---------|---------|
+| Dev (this repo) | Claude | Code — API, UI, features |
+| [Ops](https://github.com/redhoram/MiniHire-Ops) | Antigravity (Gemini) | Research, content, docs, analysis — anything non-code |
+
+The Ops squad (Nayaka, Lekha, Aksara, Ganita, Waskita) lives in a separate repo and scope evolves by issue, not a fixed roadmap.

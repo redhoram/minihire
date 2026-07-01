@@ -46,3 +46,14 @@ npm run build  # type check + production build
 Issue masuk → Jaya (spec + delegasi) → Citra (desain) → Sthira + Cipta (coding) → Prajna (testing) → Jaya (SHIP / NEEDS WORK / BLOCK)
 
 Lihat [CLAUDE.md](./CLAUDE.md) untuk spec lengkap dan konvensi tim.
+
+## Di Luar Kode: Ops Squad
+
+MiniHire juga punya **squad AI non-dev** yang bekerja beriringan dengan tim dev — membuktikan Multica bisa menjalankan kerja coding dan non-coding secara paralel, di runtime berbeda.
+
+| Squad | Runtime | Tugas |
+|-------|---------|-------|
+| Dev (repo ini) | Claude | Kode — API, UI, fitur |
+| [Ops](https://github.com/redhoram/MiniHire-Ops) | Antigravity (Gemini) | Riset, konten, dokumentasi, analisis — apapun yang non-kode |
+
+Squad Ops (Nayaka, Lekha, Aksara, Ganita, Waskita) ada di repo terpisah, scope-nya berkembang lewat issue, bukan roadmap tetap.
