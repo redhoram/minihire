@@ -49,11 +49,11 @@ See [CLAUDE.md](./CLAUDE.md) for the full spec and conventions.
 
 ## Beyond Code: The Ops Squad
 
-MiniHire also has a **non-dev AI squad** — Pendamping — working alongside the dev team in this same repo, proving Multica can run coding and non-coding work in parallel, on separate runtimes.
+MiniHire also has a **non-dev AI squad** — MiniHire Ops — working alongside the dev team in this same repo, proving Multica can run coding and non-coding work in parallel, on separate runtimes.
 
 | Squad | Runtime | Handles |
 |-------|---------|---------|
 | Dev | Claude | Code — API, UI, features |
-| Pendamping (Nayaka, Lekha, Aksara, Ganita, Waskita) | Antigravity (Gemini) | Research, content, docs, analysis — anything non-code, saved to [`outputs/`](./outputs) |
+| MiniHire Ops (Nayaka, Lekha, Aksara, Ganita, Waskita) | Antigravity (Gemini) | Research, content, docs, analysis — anything non-code, saved to [`outputs/`](./outputs) |
 
-The Ops squad (Nayaka, Lekha, Aksara, Ganita, Waskita) lives in a separate repo and scope evolves by issue, not a fixed roadmap.
+MiniHire Ops's scope evolves by issue, not a fixed roadmap — see [CLAUDE.md](./CLAUDE.md#ops-squad-non-dev) for roles and conventions.

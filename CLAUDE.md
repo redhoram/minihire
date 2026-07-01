@@ -147,10 +147,10 @@ Co-Authored-By: Sthira <backend-dev@multica.ai>
 
 ## Ops Squad (non-dev)
 
-Alongside the dev squad, a second Multica squad — **Pendamping** — works in this same repo on
-the **Antigravity (Gemini)** runtime, handling anything non-code: research, content, data
-analysis, and review. This proves Multica can run coding and non-coding work in parallel, in
-the same project.
+Alongside **MiniHire Dev** (the squad above), a second Multica squad — **MiniHire Ops** —
+works in this same repo on the **Antigravity (Gemini)** runtime, handling anything non-code:
+research, content, data analysis, and review. This proves Multica can run coding and
+non-coding work in parallel, in the same project.
 
 **Output conventions:**
 - All deliverables are markdown, saved to `outputs/[topic-slug]-[YYYY-MM].md`.
@@ -175,6 +175,6 @@ Commit trailer for this squad:
 Co-Authored-By: Nayaka (AI Agent) <coordinator@multica.ai>
 ```
 
-Cross-squad requests: dev squad mentions `@Pendamping` (or `@Nayaka`) in an issue comment with
-a short brief; Nayaka delegates internally and posts the result back as a comment + file in
-`outputs/`.
+Cross-squad requests: MiniHire Dev mentions `@MiniHire Ops` (or `@Nayaka`) in an issue comment
+with a short brief; Nayaka delegates internally and posts the result back as a comment + file
+in `outputs/`.
