@@ -49,11 +49,14 @@ Lihat [CLAUDE.md](./CLAUDE.md) untuk spec lengkap dan konvensi tim.
 
 ## Di Luar Kode: Ops Squad
 
-MiniHire juga punya **squad AI non-dev** — MiniHire Ops — yang bekerja beriringan dengan tim dev di repo yang sama, membuktikan Multica bisa menjalankan kerja coding dan non-coding secara paralel, di runtime berbeda.
+MiniHire juga punya **squad AI non-dev** yang bekerja beriringan dengan tim dev di repo yang sama, pada runtime **Antigravity (Gemini)** — membuktikan Multica bisa menjalankan kerja coding dan non-coding secara paralel.
 
-| Squad | Runtime | Tugas |
-|-------|---------|-------|
-| Dev | Claude | Kode — API, UI, fitur |
-| MiniHire Ops (Nayaka, Lekha, Aksara, Ganita, Waskita) | Antigravity (Gemini) | Riset, konten, dokumentasi, analisis — apapun yang non-kode, disimpan di [`outputs/`](./outputs) |
+| Agent | Nama | Peran |
+|-------|------|-------|
+| `coordinator` | Nayaka | Squad leader — baca issue, delegasi, tidak mengerjakan sendiri |
+| `researcher` | Lekha | Riset, fact-finding, competitor/market scan |
+| `content-writer` | Aksara | Draft dokumen, post, copy, aset tulisan |
+| `data-analyst` | Ganita | Analisis data, hitung metrik, laporan |
+| `reviewer` | Waskita | Quality gate — APPROVED / NEEDS REVISION / ESCALATE |
 
-Scope MiniHire Ops berkembang lewat issue, bukan roadmap tetap — lihat [CLAUDE.md](./CLAUDE.md#ops-squad-non-dev) untuk peran dan konvensinya.
+Output disimpan di [`outputs/`](./outputs). Scope berkembang lewat issue, bukan roadmap tetap — lihat [CLAUDE.md](./CLAUDE.md#ops-squad-non-dev) untuk konvensinya.
